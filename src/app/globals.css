@@ -120,3 +120,19 @@
     @apply bg-background text-foreground;
   }
 }
+
+
+@keyframes breathing {
+  0%, 100% {
+    transform: scale(1);
+    box-shadow: 0 0 0px rgba(34, 197, 94, 0.6);
+  }
+  50% {
+    transform: scale(1.3);
+    box-shadow: 0 0 8px rgba(34, 197, 94, 0.8);
+  }
+}
+
+.breathing {
+  animation: breathing 1.8s ease-in-out infinite;
+}
