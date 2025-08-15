@@ -3,7 +3,7 @@
 An interactive AI mentor chat platform built with Next.js, TypeScript, and Generative AI.
 Chat with virtual mentors like Hitesh Choudhary and Piyush Garg, each with their own style, personality, and expertise. Perfect for learning coding, AI, and career tips in a fun, engaging way.
 
-## ![Home Screenshot](https://raw.githubusercontent.com/mnraza-dev/persona_ai/public/home.png)
+## ![Home Screenshot](https://raw.githubusercontent.com/mnraza-dev/persona_ai/public/screenshots/home.png)
 
 ## 📺 Live Demo
 
