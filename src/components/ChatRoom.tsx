@@ -57,11 +57,10 @@ export default function ChatRoom({ mentorId, onBack }: ChatRoomProps) {
         {messages.map((m, i) => (
           <div
             key={i}
-            className={`max-w-[100%] w-fit p-2 rounded-lg flex items-start gap-2 ${
-              m.from === "You"
+            className={`max-w-[100%] w-fit p-2 rounded-lg flex items-start gap-2 ${m.from === "You"
                 ? "bg-green-200 text-black self-end ml-auto flex-row-reverse"
                 : "bg-blue-200 text-black self-start"
-            }`}
+              }`}
           >
             {/* Show avatar only for AI messages */}
             {m.from !== "You" && (
@@ -90,8 +89,14 @@ export default function ChatRoom({ mentorId, onBack }: ChatRoomProps) {
           onKeyDown={(e) => e.key === "Enter" && sendMessage()}
           disabled={loading}
         />
-        <Button className="cursor-pointer" onClick={sendMessage} disabled={loading}>
-          <SendIcon className="w-5 h-5 text-green-600" />
+
+        <Button
+          onClick={sendMessage}
+          disabled={loading}
+          className="bg-black dark:bg-gray-900 dark:hover:bg-gray-800 text-white hover:bg-gray-800 disabled:opacity-50 disabled:cursor-not-allowed"
+        >
+          <SendIcon className="w-5 h-5" />
+
         </Button>
       </div>
     </div>

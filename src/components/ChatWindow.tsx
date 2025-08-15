@@ -20,9 +20,9 @@ export default function ChatWindow({ chat, onToggle, onClose }: ChatWindowProps)
     <div
       className={`flex flex-col rounded-t-lg shadow-lg overflow-hidden transition-all duration-300 border
         ${chat.expanded ? "w-80 h-96" : "w-80 h-14"}
-        bg-white text-black border-gray-300`}
+        bg-amber-50 text-black border-gray-300 dark:bg-background `}
     >
-      {/* Header: Always visible */}
+
       <div
         className="flex justify-between items-center p-3 border-b bg-gray-100 border-gray-300 cursor-pointer"
         onClick={() => onToggle(chat.id)}
@@ -40,7 +40,7 @@ export default function ChatWindow({ chat, onToggle, onClose }: ChatWindowProps)
           variant="ghost"
           size="sm"
           onClick={(e) => {
-            e.stopPropagation(); // prevent toggling when clicking close
+            e.stopPropagation();
             onClose(chat.id);
           }}
           className="text-gray-600 hover:text-gray-900"

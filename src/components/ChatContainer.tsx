@@ -3,13 +3,24 @@
 import { useState } from "react";
 import MentorSelect from "@/components/MentorSelect";
 import ChatWindow from "@/components/ChatWindow";
+import { useTheme } from "next-themes";
+import { Typewriter } from "react-simple-typewriter";
 
 export default function ChatContainer() {
+  const [selectedMentors, setSelectedMentors] = useState<string[]>([]);
+  const { theme } = useTheme();
+
+  const logoGradient =
+    theme === "dark"
+      ? "bg-gradient-to-r from-cyan-300 to-yellow-400"
+      : "bg-gradient-to-r from-blue-400 to-red-600";
+
   const [openChats, setOpenChats] = useState<{ id: string; expanded: boolean }[]>([]);
 
   const handleMentorSelect = (mentorId: string) => {
     if (!openChats.some((c) => c.id === mentorId)) {
       setOpenChats((prev) => [...prev, { id: mentorId, expanded: true }]);
+      setSelectedMentors((prev) => [...prev, mentorId]);
     } else {
       setOpenChats((prev) =>
         prev.map((c) => (c.id === mentorId ? { ...c, expanded: true } : c))
@@ -27,14 +38,38 @@ export default function ChatContainer() {
 
   const closeChat = (mentorId: string) => {
     setOpenChats((prev) => prev.filter((c) => c.id !== mentorId));
+    setSelectedMentors((prev) => prev.filter((id) => id !== mentorId));
   };
 
   return (
     <div className="min-h-screen p-6 max-w-6xl mx-auto bg-background text-foreground">
-      <h1 className="text-2xl font-bold mb-4">Choose Your Mentor</h1>
-      <MentorSelect onSelect={handleMentorSelect} />
+      <h1
+        className={`font-thin pt-12 text-4xl leading-1.5 text-center ${logoGradient} bg-clip-text text-transparent`}
+      >
+        Choose Your
+        <span>
+          <span className="whitespace-nowrap ml-2 text-3xl font-semibold">
+            <Typewriter
+              words={["AI Buddies", "AI Companions", "AI Friends"]}
+              loop={false}
+              cursor
+              cursorStyle="|"
+              typeSpeed={200}
+              deleteSpeed={100}
+              delaySpeed={2000}
+            />
+          </span>
+          <span> and Start Chatting</span>
+        </span>
+      </h1>
 
-      {/* Chat Windows (Bottom Right) */}
+      <div className="text-center text-xl font-thin dark:text-gray-200 ml-2">
+        Select a mentor to begin chatting
+      </div>
+
+      <MentorSelect onSelect={handleMentorSelect} selectedMentors={selectedMentors} />
+
+      {/* Render chat windows side by side */}
       {openChats.map((chat, index) => (
         <div
           key={chat.id}
@@ -45,11 +80,7 @@ export default function ChatContainer() {
             zIndex: 50,
           }}
         >
-          <ChatWindow
-            chat={chat}
-            onToggle={toggleChat}
-            onClose={closeChat}
-          />
+          <ChatWindow chat={chat} onToggle={toggleChat} onClose={closeChat} />
         </div>
       ))}
     </div>
