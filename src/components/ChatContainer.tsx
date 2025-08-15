@@ -19,7 +19,9 @@ export default function ChatContainer() {
 
   const toggleChat = (mentorId: string) => {
     setOpenChats((prev) =>
-      prev.map((c) => (c.id === mentorId ? { ...c, expanded: !c.expanded } : c))
+      prev.map((c) =>
+        c.id === mentorId ? { ...c, expanded: !c.expanded } : c
+      )
     );
   };
 
@@ -33,16 +35,23 @@ export default function ChatContainer() {
       <MentorSelect onSelect={handleMentorSelect} />
 
       {/* Chat Windows (Bottom Right) */}
-      <div className="fixed bottom-4 right-4 flex space-x-2 z-50">
-        {openChats.map((chat) => (
+      {openChats.map((chat, index) => (
+        <div
+          key={chat.id}
+          style={{
+            position: "fixed",
+            bottom: "1rem",
+            right: `${index * 340 + 16}px`, // 320px width + 20px gap
+            zIndex: 50,
+          }}
+        >
           <ChatWindow
-            key={chat.id}
-            chat={chat}               // Pass the full chat object
-            onToggle={toggleChat}     // Pass the function directly
-            onClose={closeChat}       // Pass the function directly
+            chat={chat}
+            onToggle={toggleChat}
+            onClose={closeChat}
           />
-        ))}
-      </div>
+        </div>
+      ))}
     </div>
   );
 }
