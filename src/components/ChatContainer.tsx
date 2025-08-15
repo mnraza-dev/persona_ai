@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import MentorSelect from "@/components/MentorSelect";
 import ChatWindow from "@/components/ChatWindow";
 import { useTheme } from "next-themes";
@@ -9,11 +9,15 @@ import { Typewriter } from "react-simple-typewriter";
 export default function ChatContainer() {
   const [selectedMentors, setSelectedMentors] = useState<string[]>([]);
   const { theme } = useTheme();
+  const [mounted, setMounted] = useState(false);
 
-  const logoGradient =
-    theme === "dark"
+  useEffect(() => setMounted(true), []);
+
+  const logoGradient = mounted
+    ? theme === "dark"
       ? "bg-gradient-to-r from-cyan-300 to-yellow-400"
-      : "bg-gradient-to-r from-blue-400 to-red-600";
+      : "bg-gradient-to-r from-blue-400 to-red-600"
+    : ""; 
 
   const [openChats, setOpenChats] = useState<{ id: string; expanded: boolean }[]>([]);
 
@@ -49,15 +53,17 @@ export default function ChatContainer() {
         Choose Your
         <span>
           <span className="whitespace-nowrap ml-2 text-3xl font-semibold">
-            <Typewriter
-              words={["AI Buddies", "AI Companions", "AI Friends"]}
-              loop={false}
-              cursor
-              cursorStyle="|"
-              typeSpeed={200}
-              deleteSpeed={100}
-              delaySpeed={2000}
-            />
+            {mounted && (
+              <Typewriter
+                words={["AI Buddies", "AI Companions", "AI Friends"]}
+                loop={false}
+                cursor
+                cursorStyle="|"
+                typeSpeed={200}
+                deleteSpeed={100}
+                delaySpeed={2000}
+              />
+            )}
           </span>
           <span> and Start Chatting</span>
         </span>

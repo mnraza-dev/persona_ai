@@ -1,18 +1,25 @@
 "use client";
+
 import Link from "next/link";
 import { Github, Twitter } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { ModeToggle } from "./ModeToggle";
 import { Typewriter } from "react-simple-typewriter";
 import { useTheme } from "next-themes";
+import { useEffect, useState } from "react";
 
 const Navbar = () => {
   const { theme } = useTheme();
+  const [mounted, setMounted] = useState(false);
 
-  const logoGradient =
-    theme === "dark"
+  // This ensures theme is read only after client mount
+  useEffect(() => setMounted(true), []);
+
+  const logoGradient = mounted
+    ? theme === "dark"
       ? "bg-gradient-to-r from-cyan-300 to-yellow-400"
-      : "bg-gradient-to-r from-blue-400 to-red-600";
+      : "bg-gradient-to-r from-blue-400 to-red-600"
+    : ""; // fallback empty on SSR
 
   return (
     <nav className="fixed top-4 left-1/2 -translate-x-1/2 z-50 w-[95%] rounded-2xl border border-white/20 dark:border-white/10 bg-white/40 dark:bg-black/40 backdrop-blur-xl shadow-lg">
