@@ -7,7 +7,7 @@ Chat with virtual mentors like Hitesh Choudhary and Piyush Garg, each with their
 
 ## 📺 Live Demo
 
-Check out the live app here: https://persona-ai.vercel.app/
+Check out the live app here: https://ai-persona-mnraza.vercel.app/
 
 ---
 
@@ -35,9 +35,9 @@ Check out the live app here: https://persona-ai.vercel.app/
 ### 1️⃣ Clone the repository
 
 ```bash
-git clone https://github.com/mnraza-dev/persona-ai.git
+git clone https://github.com/mnraza-dev/persona_ai.git
 
-cd persona-ai
+cd persona_ai
 
 pnpm install
 
@@ -70,8 +70,3 @@ Chat Example with Piyush Garg
 User: "Any advice for portfolio building?"
 Piyush: "Dekho bhai! Hands-on projects kar, GitHub me showcase karo 😎. Gen AI course ke projects bhi add kar, career ka rocket ready! 🚀"
 ```
-
-## 📷 Screenshots
-
-![Home Screenshot]()
-
