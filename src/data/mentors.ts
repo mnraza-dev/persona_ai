@@ -23,7 +23,7 @@ export const mentorProfiles: MentorProfile[] = [
     key: "mentor-pg",
     displayName: "Buildmaster Piyush",
     shortTitle: "Project Evangelist",
- avatar: "https://github.com/piyushgarg-dev.png",
+    avatar: "https://github.com/piyushgarg-dev.png",
     bio: "Champion of 'learning by building', motivating devs to create, ship, and showcase projects.",
     styleNote: "High-energy motivator with a maker's mindset",
     tonePrompt:

@@ -2,61 +2,56 @@ import { useState } from "react";
 import { mentorProfiles } from "@/data/mentors";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-// import { generateAIResponse } from "@/lib/ai"; // <-- import the Gemini handler
-
+import { generateAIResponse } from "@/lib/ai"; 
 interface ChatRoomProps {
   mentorId: string;
   onBack: () => void;
 }
-
 export default function ChatRoom({ mentorId, onBack }: ChatRoomProps) {
   const mentor = mentorProfiles.find((p) => p.key === mentorId);
   const [messages, setMessages] = useState<{ from: string; text: string }[]>([]);
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
 
-  const sendMessage = async () => {
-    if (!input.trim() || !mentor) return;
+ const sendMessage = async () => {
+  if (!input.trim()) return;
 
-    const userMessage = input.trim();
-    setMessages((prev) => [...prev, { from: "You", text: userMessage }]);
-    setInput("");
-    setLoading(true);
+  setMessages((prev) => [...prev, { from: "You", text: input.trim() }]);
+  const userMessage = input.trim();
+  setInput("");
 
-    try {
-      const personaData = mentorProfiles.find((p) => p.key === mentorId);
-      if (!personaData) throw new Error("Persona not found for mentor");
+try {
+  const res = await fetch("/api/chat", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ message: input, personaId: mentorId }),
+  });
+  const data = await res.json();
+  setMessages((prev) => [...prev, { from: mentorId, text: data.reply }]);
+} catch (err) {
+  console.error("Fetch AI Error:", err);
+  setMessages((prev) => [
+    ...prev,
+    { from: "AI", text: "Oops, something went wrong. Try again later!" },
+  ]);
+}
 
-      // const aiReply = await generateAIResponse(userMessage, [personaData], 0.8, "default");
+};
 
-      // setMessages((prev) => [
-      //   ...prev,
-      //   { from: mentor.displayName, text: aiReply }
-      // ]);
-    } catch (err) {
-      console.error(err);
-      setMessages((prev) => [
-        ...prev,
-        { from: mentor.displayName, text: "Oops! AI is busy right now 😅" }
-      ]);
-    } finally {
-      setLoading(false);
-    }
-  };
 
   if (!mentor) return null;
 
   return (
     <div className="flex flex-col h-full max-h-screen">
-      {/* Chat Messages */}
+
       <div className="flex-1 overflow-y-auto p-4 space-y-3 bg-muted/30">
         {messages.map((m, i) => (
           <div
             key={i}
             className={`max-w-[70%] p-2 rounded-lg ${
               m.from === "You"
-                ? "bg-blue-500 text-white self-end ml-auto"
-                : "bg-muted"
+                ? "bg-green-200 text-black self-end ml-auto"
+                : "bg-blue-200 text-black self-start mr-auto"
             }`}
           >
             <p className="text-sm">{m.text}</p>
