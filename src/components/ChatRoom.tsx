@@ -5,24 +5,30 @@ import { mentorProfiles } from "@/data/mentors";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { SendIcon } from "lucide-react";
+import Image from "next/image";
 
 interface ChatRoomProps {
   mentorId: string;
-  onBack: () => void;
+  onBack?: () => void;
 }
 
-export default function ChatRoom({ mentorId, onBack }: ChatRoomProps) {
+export default function ChatRoom({ mentorId }: ChatRoomProps) {
   const mentor = mentorProfiles.find((p) => p.key === mentorId);
   const [messages, setMessages] = useState<{ from: string; text: string }[]>([]);
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
   const scrollRef = useRef<HTMLDivElement>(null);
 
-  if (!mentor) return null;
-  useEffect(() => {
-    scrollRef.current?.scrollTo({ top: scrollRef.current.scrollHeight, behavior: "smooth" });
-  }, [messages, loading]);
 
+  useEffect(() => {
+    if (!mentor) return; // safe to return inside the hook
+    scrollRef.current?.scrollTo({
+      top: scrollRef.current.scrollHeight,
+      behavior: "smooth",
+    });
+  }, [messages, loading, mentor]);
+
+  if (!mentor) return null;
   const sendMessage = async () => {
     if (!input.trim()) return;
 
@@ -64,16 +70,17 @@ export default function ChatRoom({ mentorId, onBack }: ChatRoomProps) {
         {messages.map((m, i) => (
           <div
             key={i}
-            className={`max-w-[100%] w-fit p-2 rounded-lg flex items-start gap-2 ${
-              m.from === "You"
-                ? "bg-green-200 text-black self-end ml-auto flex-row-reverse"
-                : "bg-blue-200 text-black self-start"
-            }`}
+            className={`max-w-[100%] w-fit p-2 rounded-lg flex items-start gap-2 ${m.from === "You"
+              ? "bg-green-200 text-black self-end ml-auto flex-row-reverse"
+              : "bg-blue-200 text-black self-start"
+              }`}
           >
             {m.from !== "You" && (
-              <img
+              <Image
                 src={mentor.avatar}
                 alt={mentor.displayName}
+                width={32}
+                height={32}
                 className="w-8 h-8 rounded-full"
               />
             )}

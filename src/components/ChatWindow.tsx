@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import ChatRoom from "./ChatRoom";
 import { X } from "lucide-react";
 import { mentorProfiles } from "@/data/mentors";
+import Image from "next/image";
 
 interface ChatWindowProps {
   chat: { id: string; expanded: boolean };
@@ -28,10 +29,12 @@ export default function ChatWindow({ chat, onToggle, onClose }: ChatWindowProps)
         onClick={() => onToggle(chat.id)}
       >
         <div className="flex items-center gap-2 relative">
-          <img
+          <Image
             src={mentor.avatar}
             alt={mentor.displayName}
             className="w-8 h-8 rounded-full"
+            width={32}
+            height={32}
           />
           <span className="absolute bottom-0 left-6 block w-2.5 h-2.5 bg-green-500 border-2 border-white rounded-full breathing"></span>
           <span className="font-medium">{mentor.displayName}</span>

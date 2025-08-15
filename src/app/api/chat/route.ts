@@ -43,11 +43,17 @@ export async function POST(req: Request) {
     const result = await model.generateContent(prompt);
 
     return NextResponse.json({ reply: result.response.text() });
-  } catch (error: any) {
-    console.error("AI Error:", error);
+  } catch (error: unknown) {
+    let errorMessage = "Unknown error";
+
+    if (error instanceof Error) {
+      errorMessage = error.message;
+    }
+
+    console.error("AI Error:", errorMessage);
     return NextResponse.json({
       reply: "Sorry, the AI model is busy right now. Please try again in a few seconds.",
-      error: error.message,
+      error: errorMessage,
     });
   }
 }
