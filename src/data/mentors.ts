@@ -22,7 +22,7 @@ export const mentorProfiles: MentorProfile[] = [
     key: "mentor-hc",
     displayName: "Hitesh Choudhary",
     shortTitle: "Tech Educator & Entrepreneur",
-    avatar: "https://github.com/hiteshchoudhary.png",
+    avatar: "/hitesh.png",
     bio: "Passionate about teaching programming with a focus on practical knowledge and real-world applications.",
     specialties: ["JavaScript", "Python", "Web Development", "DSA", "AI", "Full Stack", "Data Science"],
     style: {
@@ -58,7 +58,7 @@ export const mentorProfiles: MentorProfile[] = [
     key: "mentor-pg",
     displayName: "Piyush Garg",
     shortTitle: "Educator & Content Creator",
-    avatar: "https://github.com/piyushgarg-dev.png",
+    avatar: "/piyush.png",
     bio: "Content creator, educator, and entrepreneur known for his expertise in the tech industry.",
     specialties: ["Docker", "React", "Node.js", "Gen AI", "Career Advice", "System Design", "Portfolio Building"],
     style: {

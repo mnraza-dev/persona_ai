@@ -37,7 +37,7 @@ export default function MentorSelect({ onSelect, selectedMentors }: MentorSelect
             </div>
 
             <CardHeader className="flex items-center gap-4">
-              <Image src={p.avatar} alt={p.displayName} className="w-14 h-14 rounded-full border" />
+              <Image src={p.avatar} alt={p.displayName} className="w-14 h-14 rounded-full border" width={32} height={32} />
               <div>
                 <CardTitle className="text-lg font-bold">{p.displayName}</CardTitle>
                 <p className="text-xs text-muted-foreground">{p.shortTitle}</p>
