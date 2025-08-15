@@ -1,4 +1,3 @@
-// Example: /lib/ai.ts
 import { GoogleGenerativeAI } from "@google/generative-ai";
 import { mentorProfiles } from "@/data/mentors";
 

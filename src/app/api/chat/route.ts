@@ -1,4 +1,3 @@
-// app/api/chat/route.ts
 import { NextResponse } from "next/server";
 import { GoogleGenerativeAI } from "@google/generative-ai";
 
@@ -20,8 +19,6 @@ export async function POST(req: Request) {
     return NextResponse.json({ reply: result.response.text() });
   } catch (error: any) {
     console.error("AI Error:", error);
-
-    // Return fallback instead of crashing
     return NextResponse.json({
       reply: "Sorry, the AI model is busy right now. Please try again in a few seconds.",
       error: error.message,
