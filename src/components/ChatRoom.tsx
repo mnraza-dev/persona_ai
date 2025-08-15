@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import { mentorProfiles } from "@/data/mentors";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -16,8 +16,12 @@ export default function ChatRoom({ mentorId, onBack }: ChatRoomProps) {
   const [messages, setMessages] = useState<{ from: string; text: string }[]>([]);
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
+  const scrollRef = useRef<HTMLDivElement>(null);
 
   if (!mentor) return null;
+  useEffect(() => {
+    scrollRef.current?.scrollTo({ top: scrollRef.current.scrollHeight, behavior: "smooth" });
+  }, [messages, loading]);
 
   const sendMessage = async () => {
     if (!input.trim()) return;
@@ -53,16 +57,19 @@ export default function ChatRoom({ mentorId, onBack }: ChatRoomProps) {
 
   return (
     <div className="flex flex-col h-full max-h-screen">
-      <div className="flex-1 overflow-y-auto p-4 space-y-3 bg-muted/30 scrollbar-none">
+      <div
+        ref={scrollRef}
+        className="flex-1 overflow-y-auto p-4 space-y-3 bg-muted/30 scrollbar-none"
+      >
         {messages.map((m, i) => (
           <div
             key={i}
-            className={`max-w-[100%] w-fit p-2 rounded-lg flex items-start gap-2 ${m.from === "You"
+            className={`max-w-[100%] w-fit p-2 rounded-lg flex items-start gap-2 ${
+              m.from === "You"
                 ? "bg-green-200 text-black self-end ml-auto flex-row-reverse"
                 : "bg-blue-200 text-black self-start"
-              }`}
+            }`}
           >
-            {/* Show avatar only for AI messages */}
             {m.from !== "You" && (
               <img
                 src={mentor.avatar}
@@ -96,7 +103,6 @@ export default function ChatRoom({ mentorId, onBack }: ChatRoomProps) {
           className="bg-black dark:bg-gray-900 dark:hover:bg-gray-800 text-white hover:bg-gray-800 disabled:opacity-50 disabled:cursor-not-allowed"
         >
           <SendIcon className="w-5 h-5" />
-
         </Button>
       </div>
     </div>
