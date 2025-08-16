@@ -40,20 +40,46 @@ export async function POST(req: Request) {
     });
 
     const prompt = buildPersonaPrompt(personaId, message);
-    const result = await model.generateContent(prompt);
 
-    return NextResponse.json({ reply: result.response.text() });
+    // ✅ Correct method
+    const result = await model.generateContentStream({
+      contents: [{ role: "user", parts: [{ text: prompt }] }],
+    });
+
+    const encoder = new TextEncoder();
+    const stream = new ReadableStream({
+      async start(controller) {
+        try {
+          for await (const chunk of result.stream) {
+            const text = chunk.text();
+            if (text) {
+              controller.enqueue(encoder.encode(text));
+            }
+          }
+        } catch (err) {
+          console.error("Stream error:", err);
+          controller.enqueue(encoder.encode("⚠️ Error generating response."));
+        } finally {
+          controller.close();
+        }
+      },
+    });
+
+    return new NextResponse(stream, {
+      headers: { "Content-Type": "text/plain; charset=utf-8" },
+    });
   } catch (error: unknown) {
     let errorMessage = "Unknown error";
-
-    if (error instanceof Error) {
-      errorMessage = error.message;
-    }
+    if (error instanceof Error) errorMessage = error.message;
 
     console.error("AI Error:", errorMessage);
-    return NextResponse.json({
-      reply: "Sorry, the AI model is busy right now. Please try again in a few seconds.",
-      error: errorMessage,
-    });
+    return NextResponse.json(
+      {
+        reply:
+          "Sorry, the AI model is busy right now. Please try again in a few seconds.",
+        error: errorMessage,
+      },
+      { status: 500 }
+    );
   }
 }

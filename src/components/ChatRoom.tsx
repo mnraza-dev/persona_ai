@@ -1,27 +1,22 @@
 "use client";
-
 import { useState, useRef, useEffect } from "react";
 import { mentorProfiles } from "@/data/mentors";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { SendIcon } from "lucide-react";
 import Image from "next/image";
-
 interface ChatRoomProps {
   mentorId: string;
   onBack?: () => void;
 }
-
 export default function ChatRoom({ mentorId }: ChatRoomProps) {
   const mentor = mentorProfiles.find((p) => p.key === mentorId);
   const [messages, setMessages] = useState<{ from: string; text: string }[]>([]);
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
   const scrollRef = useRef<HTMLDivElement>(null);
-
-
   useEffect(() => {
-    if (!mentor) return; // safe to return inside the hook
+    if (!mentor) return; 
     scrollRef.current?.scrollTo({
       top: scrollRef.current.scrollHeight,
       behavior: "smooth",
@@ -44,14 +39,26 @@ export default function ChatRoom({ mentorId }: ChatRoomProps) {
         body: JSON.stringify({ message: userMessage, personaId: mentorId }),
       });
 
-      const data = await res.json();
+      if (!res.body) throw new Error("No response body");
 
-      setMessages((prev) => [
-        ...prev,
-        { from: mentor.displayName, text: data.reply || "AI did not respond." },
-      ]);
+      const reader = res.body.getReader();
+      const decoder = new TextDecoder();
+      let aiText = "";
+      setMessages((prev) => [...prev, { from: mentor.displayName, text: "" }]);
+
+      while (true) {
+        const { done, value } = await reader.read();
+        if (done) break;
+
+        aiText += decoder.decode(value, { stream: true });
+        setMessages((prev) => {
+          const updated = [...prev];
+          updated[updated.length - 1] = { from: mentor.displayName, text: aiText };
+          return updated;
+        });
+      }
     } catch (err) {
-      console.error("Fetch AI Error:", err);
+      console.error("Streaming error:", err);
       setMessages((prev) => [
         ...prev,
         { from: "AI", text: "Oops, something went wrong. Try again later!" },
@@ -60,7 +67,6 @@ export default function ChatRoom({ mentorId }: ChatRoomProps) {
       setLoading(false);
     }
   };
-
   return (
     <div className="flex flex-col h-full max-h-screen">
       <div
@@ -102,6 +108,7 @@ export default function ChatRoom({ mentorId }: ChatRoomProps) {
           placeholder={`Message ${mentor.displayName.split(" ")[0]}...`}
           onKeyDown={(e) => e.key === "Enter" && sendMessage()}
           disabled={loading}
+          className="dark:text-white"
         />
 
         <Button
